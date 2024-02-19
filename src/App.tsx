@@ -4,6 +4,7 @@ import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
 import { getMinimalTotalEnergyConsumption, getEnergyConsumptions } from './service';
 import TotalConsumption from './TotalConsumption';
+import { Appliance } from './types';
 
 function App() {
   const [minimalTotalConsumption, setMinimalTotalConsumption] = useState('...');
@@ -17,7 +18,7 @@ function App() {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTotalConsumption(e.target.value);
 
-  const [donnees, setDonnees] = useState([
+  const [donnees, setDonnees] = useState<Appliance[]>([
     { id: 1, category: "F", name: 'Fridge', "power": 2000, selected: true, hours: "", energy: "", proportion: "" },
     { id: 2, category: "F", name: 'Freezer', "power": 2500, selected: true, hours: "", energy: "", proportion: "" },
     { id: 3, category: "A", name: 'Washing machine', "power": 1500, selected: true, hours: "", energy: "", proportion: "" },
