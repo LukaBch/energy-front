@@ -9,6 +9,7 @@ function Constraints({
   isResultHidden,
   donnees
 }: ConstraintsProps) {
+  const selectedAppliances = donnees.filter(donnee => donnee.selected);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px' }}>
       <div style={{ display: 'flex', gap: '10px' }}>
@@ -16,7 +17,7 @@ function Constraints({
         <div>6</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isResultHidden ? '...' : (
+          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 1 && donnee.id !== 2)) ? '...' : (
             <>
               <div>{donnees.find((donnee: Appliance) => donnee.id === 1)!.hours}</div>
               <div>+</div>
@@ -32,7 +33,7 @@ function Constraints({
         <div>1</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isResultHidden ? '...' : (
+          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 3 && donnee.id !== 4 && donnee.id !== 5)) ? '...' : (
             <>
               <div>{donnees.find((donnee: Appliance) => donnee.id === 3)!.hours}</div>
               <div>+</div>
@@ -50,7 +51,7 @@ function Constraints({
         <div>4</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isResultHidden ? '...' : (
+          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 6 && donnee.id !== 7 && donnee.id !== 8)) ? '...' : (
             <>
               <div>{donnees.find((donnee: Appliance) => donnee.id === 6)!.hours}</div>
               <div>+</div>
