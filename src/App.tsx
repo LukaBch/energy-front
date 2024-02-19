@@ -32,7 +32,7 @@ function App() {
     getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.coche).map(donnee => donnee.id))
       .then(setMinimalTotalConsumption)
       .then(() => setIsFetchingMinimalTotalEnergy(false))
-  }, [donnees]);
+  }, [JSON.stringify(donnees.map((donnee: any) => donnee.coche))]);
 
   useEffect(() => {
     setIsFetchingResults(true);
@@ -64,7 +64,10 @@ function App() {
         setTotalComputed(data.total);
       })
       .then(() => setIsFetchingResults(false))
-  }, [minimalTotalConsumption, totalConsumption])
+  }, [
+    totalConsumption,
+    JSON.stringify(donnees.map((donnee: any) => donnee.coche))
+  ]);
 
   const toggleCheckbox = (id: number) => {
     if (donnees.filter(donnee => donnee.id === id)[0].coche && donnees.filter(donnee => donnee.coche).length === 1) {
