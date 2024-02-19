@@ -5,8 +5,6 @@ type TotalConsumptionProps = {
   minimalTotalConsumption: string;
   totalConsumption: string;
   handleTotalConsumptionChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  minError: boolean;
-  maxError: boolean;
 };
 
 function TotalConsumption({
@@ -14,10 +12,10 @@ function TotalConsumption({
   minimalTotalConsumption,
   totalConsumption,
   handleTotalConsumptionChange,
-  minError,
-  maxError
 }: TotalConsumptionProps) {
   const minTotalEnergyContent = isFetchingMinimalTotalEnergy ? '...' : `${minimalTotalConsumption} kWh/day`;
+  const minError = parseFloat(totalConsumption) < parseFloat(minimalTotalConsumption);
+  const maxError = parseFloat(totalConsumption) > 75;
   const minDisplay = minError ? <div style={{ color: 'red', width: '120px' }}>{minTotalEnergyContent}</div> : <div style={{ width: '120px' }}>{minTotalEnergyContent}</div>
   const maxDisplay = maxError ? <div style={{ color: 'red' }}>75 kWh/day</div> : <div>75 kWh/day</div>
   return (

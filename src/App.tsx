@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect, useRef } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import './App.css';
 import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
@@ -11,8 +11,6 @@ function App() {
   const [totalConsumption, setTotalConsumption] = useState('60');
   const [isFetchingMinimalTotalEnergy, setIsFetchingMinimalTotalEnergy] = useState<boolean>(false);
   const [isFetchingResults, setIsFetchingResults] = useState<boolean>(false);
-  const [minError, setMinError] = useState<boolean>(false);
-  const [maxError, setMaxError] = useState<boolean>(false);
   const [totalComputed, setTotalComputed] = useState(0);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
@@ -30,21 +28,15 @@ function App() {
   ]);
 
   const validateTotalConsumption = (minimalTotalConsumptionInput: any, totalConsumptionInput: any) => {
-    setMinError(false);
-    setMaxError(false);
     if (totalConsumptionInput === '') {
       return false;
     }
     if (parseFloat(totalConsumptionInput) < parseFloat(minimalTotalConsumptionInput)) {
-      setMinError(true);
       return false;
     }
     if (parseFloat(totalConsumptionInput) > 75) {
-      setMaxError(true);
       return false;
     }
-    setMinError(false);
-    setMaxError(false);
     return true;
   }
 
@@ -103,8 +95,6 @@ function App() {
         minimalTotalConsumption={minimalTotalConsumption}
         totalConsumption={totalConsumption}
         handleTotalConsumptionChange={handleInputChange}
-        minError={minError}
-        maxError={maxError}
       />
       <EnergyTable
         isFetchingResults={isFetchingResults}
