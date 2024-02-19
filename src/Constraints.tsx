@@ -1,6 +1,8 @@
+import { Appliance } from "./types";
+
 type ConstraintsProps = {
   isResultHidden: boolean;
-  donnees: any;
+  donnees: Appliance[];
 };
 
 function Constraints({
@@ -16,9 +18,9 @@ function Constraints({
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
           {isResultHidden ? '...' : (
             <>
-              <div>{donnees.find((donnee: any) => donnee.id === 1)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 1)!.hours}</div>
               <div>+</div>
-              <div>{donnees.find((donnee: any) => donnee.id === 2)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 2)!.hours}</div>
             </>
           )}
         </div>
@@ -32,11 +34,11 @@ function Constraints({
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
           {isResultHidden ? '...' : (
             <>
-              <div>{donnees.find((donnee: any) => donnee.id === 3)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 3)!.hours}</div>
               <div>+</div>
-              <div>{donnees.find((donnee: any) => donnee.id === 4)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 4)!.hours}</div>
               <div>+</div>
-              <div>{donnees.find((donnee: any) => donnee.id === 5)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 5)!.hours}</div>
             </>
           )}
         </div>
@@ -50,11 +52,11 @@ function Constraints({
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
           {isResultHidden ? '...' : (
             <>
-              <div>{donnees.find((donnee: any) => donnee.id === 6)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 6)!.hours}</div>
               <div>+</div>
-              <div>{donnees.find((donnee: any) => donnee.id === 7)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 7)!.hours}</div>
               <div>+</div>
-              <div>{donnees.find((donnee: any) => donnee.id === 8)!.hours}</div>
+              <div>{donnees.find((donnee: Appliance) => donnee.id === 8)!.hours}</div>
             </>
           )}
         </div>

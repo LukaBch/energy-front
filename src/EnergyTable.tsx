@@ -1,8 +1,10 @@
+import { Appliance } from "./types";
+
 type EnergyTableProps = {
   isResultHidden: boolean;
-  donnees: any;
+  donnees: Appliance[];
   toggleCheckbox: (id: number) => void;
-  totalComputed: any;
+  totalComputed: number;
 };
 
 function EnergyTable({
@@ -25,7 +27,7 @@ function EnergyTable({
         </tr>
       </thead>
       <tbody>
-        {donnees.map((element: any) => (
+        {donnees.map((element: Appliance) => (
           <tr key={element.id}>
             <td>
               <input

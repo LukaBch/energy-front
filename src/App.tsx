@@ -4,7 +4,7 @@ import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
 import { getMinimalTotalEnergyConsumption, getEnergyConsumptions } from './service';
 import TotalConsumption from './TotalConsumption';
-import { Appliance } from './types';
+import { Appliance, EnergyConsumptionApi } from './types';
 
 function App() {
   const [minimalTotalConsumption, setMinimalTotalConsumption] = useState('...');
@@ -29,7 +29,7 @@ function App() {
     { id: 8, category: "L", name: 'Big Light', "power": 800, selected: true, hours: "", energy: "", proportion: "" },
   ]);
 
-  const validateTotalConsumption = (minimalTotalConsumptionInput: any, totalConsumptionInput: any) => {
+  const validateTotalConsumption = (minimalTotalConsumptionInput: string, totalConsumptionInput: string) => {
     if (totalConsumptionInput === '') {
       return false;
     }
@@ -55,7 +55,7 @@ function App() {
     getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
       .then((data) => {
         const updateData = donnees.map((item) => {
-          const toto = data.energies.find((d: any) => d.id === item.id);
+          const toto = data.energies.find((d: EnergyConsumptionApi) => d.id === item.id)!;
           if (toto) {
             return {
               ...item,
@@ -92,7 +92,7 @@ function App() {
     prevTotalConsumption.current = totalConsumption;
   }, [
     totalConsumption,
-    JSON.stringify(donnees.map((donnee: any) => donnee.selected))
+    JSON.stringify(donnees.map((donnee: Appliance) => donnee.selected))
   ]);
 
   const toggleCheckbox = (id: number) => {

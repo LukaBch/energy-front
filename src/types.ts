@@ -8,3 +8,15 @@ export type Appliance = {
   energy: string;
   proportion: string;
 }
+
+export type EnergyConsumptionApi = {
+  id: number;
+  hours: string;
+  energy: string;
+  proportion: string;
+}
+
+export type EnergyConsumptionsApi = {
+  total: number;
+  energies: EnergyConsumptionApi[];
+}
