@@ -8,7 +8,7 @@ import { Appliance } from './types';
 
 function App() {
   const [minimalTotalConsumption, setMinimalTotalConsumption] = useState('...');
-  const [totalConsumption, setTotalConsumption] = useState('60');
+  const [totalConsumption, setTotalConsumption] = useState('45');
   const [isFetchingMinimalTotalEnergy, setIsFetchingMinimalTotalEnergy] = useState<boolean>(false);
   const [isResultHidden, setIsResultHidden] = useState<boolean>(false);
   const [totalComputed, setTotalComputed] = useState(0);
