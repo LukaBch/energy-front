@@ -28,6 +28,25 @@ function App() {
     { id: 8, category: "L", name: 'Big Light', "power": 800, selected: true, hours: "", energy: "", proportion: "" },
   ]);
 
+  const validateTotalConsumption = () => {
+    setMinError(false);
+    setMaxError(false);
+    if (totalConsumption === '') {
+      return false;
+    }
+    if (parseFloat(totalConsumption) < parseFloat(minimalTotalConsumption)) {
+      setMinError(true);
+      return false;
+    }
+    if (parseFloat(totalConsumption) > 75) {
+      setMaxError(true);
+      return false;
+    }
+    setMinError(false);
+    setMaxError(false);
+    return true;
+  }
+
   useEffect(() => {
     setIsFetchingMinimalTotalEnergy(true);
     getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
@@ -37,16 +56,9 @@ function App() {
 
   useEffect(() => {
     setIsFetchingResults(true);
-    if (parseFloat(totalConsumption) < parseFloat(minimalTotalConsumption)) {
-      setMinError(true);
+    if (!validateTotalConsumption()) {
       return;
     }
-    if (parseFloat(totalConsumption) > 75) {
-      setMaxError(true);
-      return;
-    }
-    setMinError(false);
-    setMaxError(false);
     getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
       .then((data) => {
         const updateData = donnees.map((item) => {
