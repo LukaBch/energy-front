@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import './App.css';
 import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
@@ -12,6 +12,8 @@ function App() {
   const [isFetchingMinimalTotalEnergy, setIsFetchingMinimalTotalEnergy] = useState<boolean>(false);
   const [isFetchingResults, setIsFetchingResults] = useState<boolean>(false);
   const [totalComputed, setTotalComputed] = useState(0);
+
+  const prevTotalConsumption = useRef<string>();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTotalConsumption(e.target.value);
@@ -40,38 +42,54 @@ function App() {
     return true;
   }
 
-  useEffect(() => {
-    setIsFetchingMinimalTotalEnergy(true);
-    getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
+  const fetchMinimalTotalEnergy = async () => {
+    return getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
       .then((newMinimalTotalConsumption) => {
         setMinimalTotalConsumption(newMinimalTotalConsumption);
         setIsFetchingMinimalTotalEnergy(false)
         return newMinimalTotalConsumption;
       })
-      .then((updatedMinimalTotalConsumption) => {
+  }
+
+  const fetchEnergyConsumptions = () => {
+    getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
+      .then((data) => {
+        const updateData = donnees.map((item) => {
+          const toto = data.energies.find((d: any) => d.id === item.id);
+          if (toto) {
+            return {
+              ...item,
+              hours: toto.hours,
+              energy: toto.energy,
+              proportion: toto.proportion
+            }
+          }
+          return item
+        });
+        setDonnees(updateData);
+        setTotalComputed(data.total);
+      })
+      .then(() => setIsFetchingResults(false));
+  }
+
+  useEffect(() => {
+    if (prevTotalConsumption.current !== totalConsumption) {
+      if (validateTotalConsumption(minimalTotalConsumption, totalConsumption)) {
+        setIsFetchingResults(true);
+        fetchEnergyConsumptions();
+      }
+    }
+    else {
+      setIsFetchingMinimalTotalEnergy(true);
+      fetchMinimalTotalEnergy().then((updatedMinimalTotalConsumption) => {
         setIsFetchingResults(true);
         if (!validateTotalConsumption(updatedMinimalTotalConsumption, totalConsumption)) {
           return;
         }
-        getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
-          .then((data) => {
-            const updateData = donnees.map((item) => {
-              const toto = data.energies.find((d: any) => d.id === item.id);
-              if (toto) {
-                return {
-                  ...item,
-                  hours: toto.hours,
-                  energy: toto.energy,
-                  proportion: toto.proportion
-                }
-              }
-              return item
-            });
-            setDonnees(updateData);
-            setTotalComputed(data.total);
-          })
-          .then(() => setIsFetchingResults(false))
+        fetchEnergyConsumptions();
       })
+    }
+    prevTotalConsumption.current = totalConsumption;
   }, [
     totalConsumption,
     JSON.stringify(donnees.map((donnee: any) => donnee.selected))
