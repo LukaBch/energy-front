@@ -1,3 +1,7 @@
 # energy-front
 
-This project enables to visualize the repartition of energy consumption between selected appliances.
+install depedencies with `yarn`
+
+launch with `yarn up`
+
+accessible on `http://localhost:5173/`
