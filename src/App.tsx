@@ -10,7 +10,7 @@ function App() {
   const [minimalTotalConsumption, setMinimalTotalConsumption] = useState('...');
   const [totalConsumption, setTotalConsumption] = useState('60');
   const [isFetchingMinimalTotalEnergy, setIsFetchingMinimalTotalEnergy] = useState<boolean>(false);
-  const [isFetchingResults, setIsFetchingResults] = useState<boolean>(false);
+  const [isResultHidden, setIsResultHidden] = useState<boolean>(false);
   const [totalComputed, setTotalComputed] = useState(0);
 
   const prevTotalConsumption = useRef<string>();
@@ -69,20 +69,20 @@ function App() {
         setDonnees(updateData);
         setTotalComputed(data.total);
       })
-      .then(() => setIsFetchingResults(false));
+      .then(() => setIsResultHidden(false));
   }
 
   useEffect(() => {
     if (prevTotalConsumption.current !== totalConsumption) {
+      setIsResultHidden(true);
       if (validateTotalConsumption(minimalTotalConsumption, totalConsumption)) {
-        setIsFetchingResults(true);
         fetchEnergyConsumptions();
       }
     }
     else {
       setIsFetchingMinimalTotalEnergy(true);
       fetchMinimalTotalEnergy().then((updatedMinimalTotalConsumption) => {
-        setIsFetchingResults(true);
+        setIsResultHidden(true);
         if (!validateTotalConsumption(updatedMinimalTotalConsumption, totalConsumption)) {
           return;
         }
@@ -115,12 +115,12 @@ function App() {
         handleTotalConsumptionChange={handleInputChange}
       />
       <EnergyTable
-        isFetchingResults={isFetchingResults}
+        isResultHidden={isResultHidden}
         donnees={donnees}
         toggleCheckbox={toggleCheckbox}
         totalComputed={totalComputed}
       />
-      <Constraints isFetchingResults={isFetchingResults} donnees={donnees} />
+      <Constraints isResultHidden={isResultHidden} donnees={donnees} />
     </>
   );
 }

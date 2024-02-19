@@ -1,10 +1,10 @@
 type ConstraintsProps = {
-  isFetchingResults: boolean;
+  isResultHidden: boolean;
   donnees: any;
 };
 
 function Constraints({
-  isFetchingResults,
+  isResultHidden,
   donnees
 }: ConstraintsProps) {
   return (
@@ -14,7 +14,7 @@ function Constraints({
         <div>6</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isFetchingResults ? '...' : (
+          {isResultHidden ? '...' : (
             <>
               <div>{donnees.find((donnee: any) => donnee.id === 1)!.hours}</div>
               <div>+</div>
@@ -30,7 +30,7 @@ function Constraints({
         <div>1</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isFetchingResults ? '...' : (
+          {isResultHidden ? '...' : (
             <>
               <div>{donnees.find((donnee: any) => donnee.id === 3)!.hours}</div>
               <div>+</div>
@@ -48,7 +48,7 @@ function Constraints({
         <div>4</div>
         <div>&#8804;</div>
         <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {isFetchingResults ? '...' : (
+          {isResultHidden ? '...' : (
             <>
               <div>{donnees.find((donnee: any) => donnee.id === 6)!.hours}</div>
               <div>+</div>

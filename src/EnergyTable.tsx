@@ -1,12 +1,12 @@
 type EnergyTableProps = {
-  isFetchingResults: boolean;
+  isResultHidden: boolean;
   donnees: any;
   toggleCheckbox: (id: number) => void;
   totalComputed: any;
 };
 
 function EnergyTable({
-  isFetchingResults,
+  isResultHidden,
   donnees,
   toggleCheckbox,
   totalComputed
@@ -37,7 +37,7 @@ function EnergyTable({
             <td style={{ textAlign: 'center' }}>{element.category}</td>
             <td style={{ textAlign: 'left' }}>{element.name}</td>
             <td style={{ textAlign: 'right' }}>{element.power}</td>
-            {isFetchingResults ? (
+            {isResultHidden ? (
               <>
                 <td style={{ textAlign: 'right' }}>...</td>
                 <td style={{ textAlign: 'right' }}>...</td>
@@ -58,8 +58,8 @@ function EnergyTable({
           <th />
           <th />
           <th />
-          <th style={{ textAlign: 'right' }}>{isFetchingResults ? '...' : totalComputed}</th>
-          <th style={{ textAlign: 'right' }}>{isFetchingResults ? '...' : 100}</th>
+          <th style={{ textAlign: 'right' }}>{isResultHidden ? '...' : totalComputed}</th>
+          <th style={{ textAlign: 'right' }}>{isResultHidden ? '...' : 100}</th>
         </tr>
       </tbody>
     </table>
