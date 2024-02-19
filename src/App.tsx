@@ -103,7 +103,6 @@ function App() {
           {donnees.map((element) => (
             <tr key={element.id}>
               <td>
-                {/* Checkbox for each appliance */}
                 <input
                   type="checkbox"
                   checked={element.coche}
@@ -113,7 +112,6 @@ function App() {
               <td style={{ textAlign: 'center' }}>{element.category}</td>
               <td style={{ textAlign: 'left' }}>{element.nom}</td>
               <td style={{ textAlign: 'right' }}>{element.power}</td>
-              {/* Display placeholders or actual values based on fetching status */}
               {isFetchingResults ? (
                 <>
                   <td style={{ textAlign: 'right' }}>...</td>
