@@ -17,22 +17,22 @@ function App() {
     setTotalConsumption(e.target.value);
 
   const [donnees, setDonnees] = useState([
-    { id: 1, category: "F", nom: 'Fridge', "power": 2000, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 2, category: "F", nom: 'Freezer', "power": 2500, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 3, category: "A", nom: 'Washing machine', "power": 1500, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 4, category: "A", nom: 'Dishwasher', "power": 2500, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 5, category: "A", nom: 'Induction Stove', "power": 3000, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 6, category: "L", nom: 'TV', "power": 500, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 7, category: "L", nom: 'Small Light', "power": 100, coche: true, hours: "", energy: "", proportion: "" },
-    { id: 8, category: "L", nom: 'Big Light', "power": 800, coche: true, hours: "", energy: "", proportion: "" },
+    { id: 1, category: "F", name: 'Fridge', "power": 2000, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 2, category: "F", name: 'Freezer', "power": 2500, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 3, category: "A", name: 'Washing machine', "power": 1500, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 4, category: "A", name: 'Dishwasher', "power": 2500, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 5, category: "A", name: 'Induction Stove', "power": 3000, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 6, category: "L", name: 'TV', "power": 500, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 7, category: "L", name: 'Small Light', "power": 100, selected: true, hours: "", energy: "", proportion: "" },
+    { id: 8, category: "L", name: 'Big Light', "power": 800, selected: true, hours: "", energy: "", proportion: "" },
   ]);
 
   useEffect(() => {
     setIsFetchingMinimalTotalEnergy(true);
-    getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.coche).map(donnee => donnee.id))
+    getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
       .then(setMinimalTotalConsumption)
       .then(() => setIsFetchingMinimalTotalEnergy(false))
-  }, [JSON.stringify(donnees.map((donnee: any) => donnee.coche))]);
+  }, [JSON.stringify(donnees.map((donnee: any) => donnee.selected))]);
 
   useEffect(() => {
     setIsFetchingResults(true);
@@ -46,7 +46,7 @@ function App() {
     }
     setMinError(false);
     setMaxError(false);
-    getEnergyConsumptions(donnees.filter(donnee => donnee.coche).map(donnee => donnee.id), totalConsumption)
+    getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
       .then((data) => {
         const updateData = donnees.map((item) => {
           const toto = data.energies.find((d: any) => d.id === item.id);
@@ -66,16 +66,16 @@ function App() {
       .then(() => setIsFetchingResults(false))
   }, [
     totalConsumption,
-    JSON.stringify(donnees.map((donnee: any) => donnee.coche))
+    JSON.stringify(donnees.map((donnee: any) => donnee.selected))
   ]);
 
   const toggleCheckbox = (id: number) => {
-    if (donnees.filter(donnee => donnee.id === id)[0].coche && donnees.filter(donnee => donnee.coche).length === 1) {
+    if (donnees.filter(donnee => donnee.id === id)[0].selected && donnees.filter(donnee => donnee.selected).length === 1) {
       return
     }
     setDonnees((prevDonnees) =>
       prevDonnees.map((element) =>
-        element.id === id ? { ...element, coche: !element.coche } : element
+        element.id === id ? { ...element, selected: !element.selected } : element
       )
     );
   };
@@ -108,12 +108,12 @@ function App() {
               <td>
                 <input
                   type="checkbox"
-                  checked={element.coche}
+                  checked={element.selected}
                   onChange={() => toggleCheckbox(element.id)}
                 />
               </td>
               <td style={{ textAlign: 'center' }}>{element.category}</td>
-              <td style={{ textAlign: 'left' }}>{element.nom}</td>
+              <td style={{ textAlign: 'left' }}>{element.name}</td>
               <td style={{ textAlign: 'right' }}>{element.power}</td>
               {isFetchingResults ? (
                 <>
