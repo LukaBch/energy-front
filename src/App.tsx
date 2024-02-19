@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import './App.css';
 import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
@@ -28,17 +28,17 @@ function App() {
     { id: 8, category: "L", name: 'Big Light', "power": 800, selected: true, hours: "", energy: "", proportion: "" },
   ]);
 
-  const validateTotalConsumption = () => {
+  const validateTotalConsumption = (minimalTotalConsumptionInput: any, totalConsumptionInput: any) => {
     setMinError(false);
     setMaxError(false);
-    if (totalConsumption === '') {
+    if (totalConsumptionInput === '') {
       return false;
     }
-    if (parseFloat(totalConsumption) < parseFloat(minimalTotalConsumption)) {
+    if (parseFloat(totalConsumptionInput) < parseFloat(minimalTotalConsumptionInput)) {
       setMinError(true);
       return false;
     }
-    if (parseFloat(totalConsumption) > 75) {
+    if (parseFloat(totalConsumptionInput) > 75) {
       setMaxError(true);
       return false;
     }
@@ -50,33 +50,35 @@ function App() {
   useEffect(() => {
     setIsFetchingMinimalTotalEnergy(true);
     getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
-      .then(setMinimalTotalConsumption)
-      .then(() => setIsFetchingMinimalTotalEnergy(false))
-  }, [JSON.stringify(donnees.map((donnee: any) => donnee.selected))]);
-
-  useEffect(() => {
-    setIsFetchingResults(true);
-    if (!validateTotalConsumption()) {
-      return;
-    }
-    getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
-      .then((data) => {
-        const updateData = donnees.map((item) => {
-          const toto = data.energies.find((d: any) => d.id === item.id);
-          if (toto) {
-            return {
-              ...item,
-              hours: toto.hours,
-              energy: toto.energy,
-              proportion: toto.proportion
-            }
-          }
-          return item
-        });
-        setDonnees(updateData);
-        setTotalComputed(data.total);
+      .then((newMinimalTotalConsumption) => {
+        setMinimalTotalConsumption(newMinimalTotalConsumption);
+        setIsFetchingMinimalTotalEnergy(false)
+        return newMinimalTotalConsumption;
       })
-      .then(() => setIsFetchingResults(false))
+      .then((updatedMinimalTotalConsumption) => {
+        setIsFetchingResults(true);
+        if (!validateTotalConsumption(updatedMinimalTotalConsumption, totalConsumption)) {
+          return;
+        }
+        getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
+          .then((data) => {
+            const updateData = donnees.map((item) => {
+              const toto = data.energies.find((d: any) => d.id === item.id);
+              if (toto) {
+                return {
+                  ...item,
+                  hours: toto.hours,
+                  energy: toto.energy,
+                  proportion: toto.proportion
+                }
+              }
+              return item
+            });
+            setDonnees(updateData);
+            setTotalComputed(data.total);
+          })
+          .then(() => setIsFetchingResults(false))
+      })
   }, [
     totalConsumption,
     JSON.stringify(donnees.map((donnee: any) => donnee.selected))
