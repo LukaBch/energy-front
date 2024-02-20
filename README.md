@@ -1,6 +1,6 @@
 # energy-front
 
-The corresponding backend repo is here [here](https://github.com/LukaBch/energy-back).
+The corresponding backend repo is [here](https://github.com/LukaBch/energy-back).
 
 install depedencies with `yarn`
 
