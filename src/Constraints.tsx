@@ -1,6 +1,6 @@
 import CategoryConstraint from "./CategoryConstraint";
 import constants from "./constants";
-import { ComputedAppliance, Category } from "./types";
+import { ComputedAppliance } from "./types";
 
 type ConstraintsProps = {
   isResultHidden: boolean;
