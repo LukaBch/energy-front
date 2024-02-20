@@ -1,3 +1,4 @@
+import CategoryConstraint from "./CategoryConstraint";
 import { Appliance } from "./types";
 
 type ConstraintsProps = {
@@ -9,61 +10,29 @@ function Constraints({
   isResultHidden,
   donnees
 }: ConstraintsProps) {
-  const selectedAppliances = donnees.filter(donnee => donnee.selected);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px' }}>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <div style={{ marginRight: '50px' }}>Category F</div>
-        <div>6</div>
-        <div>&#8804;</div>
-        <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 1 && donnee.id !== 2)) ? '...' : (
-            <>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 1)!.hours}</div>
-              <div>+</div>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 2)!.hours}</div>
-            </>
-          )}
-        </div>
-        <div>&#8804;</div>
-        <div>8</div>
-      </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <div style={{ marginRight: '50px' }}>Category A</div>
-        <div>1</div>
-        <div>&#8804;</div>
-        <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 3 && donnee.id !== 4 && donnee.id !== 5)) ? '...' : (
-            <>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 3)!.hours}</div>
-              <div>+</div>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 4)!.hours}</div>
-              <div>+</div>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 5)!.hours}</div>
-            </>
-          )}
-        </div>
-        <div>&#8804;</div>
-        <div>4</div>
-      </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <div style={{ marginRight: '50px' }}>Category L</div>
-        <div>4</div>
-        <div>&#8804;</div>
-        <div style={{ display: 'flex', width: '100px', justifyContent: 'center' }}>
-          {(isResultHidden || selectedAppliances.every(donnee => donnee.id !== 6 && donnee.id !== 7 && donnee.id !== 8)) ? '...' : (
-            <>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 6)!.hours}</div>
-              <div>+</div>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 7)!.hours}</div>
-              <div>+</div>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === 8)!.hours}</div>
-            </>
-          )}
-        </div>
-        <div>&#8804;</div>
-        <div>24</div>
-      </div>
+      <CategoryConstraint
+        isResultHidden={isResultHidden}
+        donnees={donnees}
+        applianceIds={[1, 2]}
+        minBoundary={6}
+        maxBoundary={8}
+      />
+      <CategoryConstraint
+        isResultHidden={isResultHidden}
+        donnees={donnees}
+        applianceIds={[3, 4, 5]}
+        minBoundary={1}
+        maxBoundary={4}
+      />
+      <CategoryConstraint
+        isResultHidden={isResultHidden}
+        donnees={donnees}
+        applianceIds={[6, 7, 8]}
+        minBoundary={4}
+        maxBoundary={24}
+      />
     </div>
   );
 }
