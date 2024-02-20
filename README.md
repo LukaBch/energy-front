@@ -1,5 +1,7 @@
 # energy-front
 
+The corresponding backend repo is here [here](https://github.com/LukaBch/energy-back).
+
 install depedencies with `yarn`
 
 launch with `yarn up`
