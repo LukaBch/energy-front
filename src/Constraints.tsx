@@ -1,9 +1,10 @@
 import CategoryConstraint from "./CategoryConstraint";
-import { Appliance } from "./types";
+import constants from "./constants";
+import { ComputedAppliance, Category } from "./types";
 
 type ConstraintsProps = {
   isResultHidden: boolean;
-  donnees: Appliance[];
+  donnees: ComputedAppliance[];
 };
 
 function Constraints({
@@ -12,27 +13,20 @@ function Constraints({
 }: ConstraintsProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px' }}>
-      <CategoryConstraint
-        isResultHidden={isResultHidden}
-        donnees={donnees}
-        applianceIds={[1, 2]}
-        minBoundary={6}
-        maxBoundary={8}
-      />
-      <CategoryConstraint
-        isResultHidden={isResultHidden}
-        donnees={donnees}
-        applianceIds={[3, 4, 5]}
-        minBoundary={1}
-        maxBoundary={4}
-      />
-      <CategoryConstraint
-        isResultHidden={isResultHidden}
-        donnees={donnees}
-        applianceIds={[6, 7, 8]}
-        minBoundary={4}
-        maxBoundary={24}
-      />
+      {constants.categories.map((category) => {
+        const appliances = constants.appliances.filter(appliance => appliance.category === category);
+        const boundaries = constants.boundaries[category];
+        return <CategoryConstraint
+          key={category}
+          isResultHidden={isResultHidden}
+          donnees={donnees}
+          applianceIds={appliances.map(appliance => appliance.id)}
+          minBoundary={boundaries["min"]}
+          maxBoundary={boundaries["max"]}
+          title={`Category ${category}`}
+        />
+      }
+      )}
     </div>
   );
 }

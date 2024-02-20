@@ -1,11 +1,12 @@
-import { Appliance } from "./types";
+import { ComputedAppliance } from "./types";
 
 type CategoryConstraintProps = {
   isResultHidden: boolean;
-  donnees: Appliance[];
+  donnees: ComputedAppliance[];
   applianceIds: number[];
   minBoundary: number;
   maxBoundary: number;
+  title: string;
 };
 
 function CategoryConstraint({
@@ -14,12 +15,13 @@ function CategoryConstraint({
   applianceIds,
   minBoundary,
   maxBoundary,
+  title,
 }: CategoryConstraintProps) {
   const selectedAppliances = donnees.filter((donnee) => donnee.selected);
 
   return (
     <div style={{ display: 'flex', gap: '10px' }}>
-      <div style={{ marginRight: '50px' }}>Category F</div>
+      <div style={{ marginRight: '50px' }}>{title}</div>
       <div>{minBoundary}</div>
       <div>&#8804;</div>
       <div style={{ display: 'flex', width: '100px', justifyContent: 'center', gap: '5px' }}>
@@ -27,8 +29,8 @@ function CategoryConstraint({
           '...'
         ) : (
           applianceIds.map((applianceId, index, array) => (
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <div>{donnees.find((donnee: Appliance) => donnee.id === applianceId)!.hours}</div>
+            <div style={{ display: 'flex', gap: '5px' }} key={applianceId}>
+              <div>{donnees.find((donnee: ComputedAppliance) => donnee.id === applianceId)!.hours}</div>
               {index < array.length - 1 && <div>+</div>}
             </div>
           ))
