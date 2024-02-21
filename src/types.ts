@@ -29,3 +29,10 @@ export type EnergyConsumptionsApi = {
   total: number;
   energies: EnergyConsumptionApi[];
 }
+
+export type Boundaries = Record<Category, { min: number; max: number }>;
+
+export type AppliancesAndBoundariesApi = {
+  appliances: Appliance[];
+  boundaries: Boundaries;
+}

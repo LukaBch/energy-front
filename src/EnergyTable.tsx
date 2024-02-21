@@ -2,14 +2,14 @@ import { ComputedAppliance } from "./types";
 
 type EnergyTableProps = {
   isResultHidden: boolean;
-  donnees: ComputedAppliance[];
+  computedAppliances: ComputedAppliance[];
   toggleCheckbox: (id: number) => void;
   totalComputed: number;
 };
 
 function EnergyTable({
   isResultHidden,
-  donnees,
+  computedAppliances,
   toggleCheckbox,
   totalComputed
 }: EnergyTableProps) {
@@ -27,7 +27,7 @@ function EnergyTable({
         </tr>
       </thead>
       <tbody>
-        {donnees.map((element: ComputedAppliance) => (
+        {computedAppliances.map((element: ComputedAppliance) => (
           <tr key={element.id}>
             <td>
               <input

@@ -2,7 +2,7 @@ import { ComputedAppliance } from "./types";
 
 type CategoryConstraintProps = {
   isResultHidden: boolean;
-  donnees: ComputedAppliance[];
+  computedAppliances: ComputedAppliance[];
   applianceIds: number[];
   minBoundary: number;
   maxBoundary: number;
@@ -11,13 +11,13 @@ type CategoryConstraintProps = {
 
 function CategoryConstraint({
   isResultHidden,
-  donnees,
+  computedAppliances,
   applianceIds,
   minBoundary,
   maxBoundary,
   title,
 }: CategoryConstraintProps) {
-  const selectedAppliances = donnees.filter((donnee) => donnee.selected);
+  const selectedAppliances = computedAppliances.filter((donnee) => donnee.selected);
 
   return (
     <div style={{ display: 'flex', gap: '10px' }}>
@@ -30,7 +30,7 @@ function CategoryConstraint({
         ) : (
           applianceIds.map((applianceId, index, array) => (
             <div style={{ display: 'flex', gap: '5px' }} key={applianceId}>
-              <div>{donnees.find((donnee: ComputedAppliance) => donnee.id === applianceId)!.hours}</div>
+              <div>{computedAppliances.find((donnee: ComputedAppliance) => donnee.id === applianceId)!.hours}</div>
               {index < array.length - 1 && <div>+</div>}
             </div>
           ))

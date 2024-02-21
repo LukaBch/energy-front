@@ -1,33 +1,28 @@
 import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import './App.css';
-import constants from './constants';
 import Constraints from './Constraints';
 import EnergyTable from './EnergyTable';
-import { getMinimalTotalEnergyConsumption, getEnergyConsumptions } from './service';
+import { getMinimalTotalEnergyConsumption, getEnergyConsumptions, getAppliancesAndBoundaries } from './service';
 import TotalConsumption from './TotalConsumption';
-import { ComputedAppliance, Appliance, EnergyConsumptionApi } from './types';
+import { ComputedAppliance, EnergyConsumptionApi, Category } from './types';
 
 function App() {
+  const initialTotalEnergyConsumption = '45';
   const [minimalTotalConsumption, setMinimalTotalConsumption] = useState('...');
-  const [totalConsumption, setTotalConsumption] = useState('45');
+  const [totalConsumption, setTotalConsumption] = useState(initialTotalEnergyConsumption);
   const [isFetchingMinimalTotalEnergy, setIsFetchingMinimalTotalEnergy] = useState<boolean>(false);
   const [isResultHidden, setIsResultHidden] = useState<boolean>(false);
+  const [isAppliancesAndBoundariesFetched, setIsAppliancesAndBoundariesFetched] = useState<boolean>(false);
   const [totalComputed, setTotalComputed] = useState(0);
 
-  const prevTotalConsumption = useRef<string>();
+  const prevTotalConsumption = useRef<string>(initialTotalEnergyConsumption);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTotalConsumption(e.target.value);
 
-  const [donnees, setDonnees] = useState<ComputedAppliance[]>(constants.appliances.map((appliance: Appliance) => {
-    return {
-      ...appliance,
-      selected: true,
-      hours: "",
-      energy: "",
-      proportion: ""
-    }
-  }));
+  const [computedAppliances, setComputedAppliances] = useState<ComputedAppliance[]>([]);
+
+  const [boundaries, setBoundaries] = useState<Record<Category, { min: number; max: number }>>();
 
   const validateTotalConsumption = (minimalTotalConsumptionInput: string, totalConsumptionInput: string) => {
     if (totalConsumptionInput === '') {
@@ -43,7 +38,7 @@ function App() {
   }
 
   const fetchMinimalTotalEnergy = async () => {
-    return getMinimalTotalEnergyConsumption(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id))
+    return getMinimalTotalEnergyConsumption(computedAppliances.filter(donnee => donnee.selected).map(donnee => donnee.id))
       .then((newMinimalTotalConsumption) => {
         setMinimalTotalConsumption(newMinimalTotalConsumption);
         setIsFetchingMinimalTotalEnergy(false)
@@ -52,9 +47,9 @@ function App() {
   }
 
   const fetchEnergyConsumptions = () => {
-    getEnergyConsumptions(donnees.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
+    getEnergyConsumptions(computedAppliances.filter(donnee => donnee.selected).map(donnee => donnee.id), totalConsumption)
       .then((data) => {
-        const updateData = donnees.map((item) => {
+        const updateData = computedAppliances.map((item) => {
           const toto = data.energies.find((d: EnergyConsumptionApi) => d.id === item.id)!;
           if (toto) {
             return {
@@ -66,45 +61,68 @@ function App() {
           }
           return item
         });
-        setDonnees(updateData);
+        setComputedAppliances(updateData);
         setTotalComputed(data.total);
       })
       .then(() => setIsResultHidden(false));
   }
 
   useEffect(() => {
-    if (prevTotalConsumption.current !== totalConsumption) {
-      setIsResultHidden(true);
-      if (validateTotalConsumption(minimalTotalConsumption, totalConsumption)) {
-        fetchEnergyConsumptions();
-      }
-    }
-    else {
-      setIsFetchingMinimalTotalEnergy(true);
-      fetchMinimalTotalEnergy().then((updatedMinimalTotalConsumption) => {
-        setIsResultHidden(true);
-        if (!validateTotalConsumption(updatedMinimalTotalConsumption, totalConsumption)) {
-          return;
+    getAppliancesAndBoundaries().then((data) => {
+      setBoundaries(data.boundaries);
+      setComputedAppliances(data.appliances.map(appliance => {
+        return {
+          ...appliance,
+          selected: true,
+          hours: "",
+          energy: "",
+          proportion: ""
         }
-        fetchEnergyConsumptions();
-      })
+      }))
+      setIsAppliancesAndBoundariesFetched(true);
+    })
+  }, []);
+
+  useEffect(() => {
+    if (isAppliancesAndBoundariesFetched) {
+      if (prevTotalConsumption.current !== totalConsumption) {
+        setIsResultHidden(true);
+        if (validateTotalConsumption(minimalTotalConsumption, totalConsumption)) {
+          fetchEnergyConsumptions();
+        }
+      }
+      else {
+        setIsFetchingMinimalTotalEnergy(true);
+        fetchMinimalTotalEnergy().then((updatedMinimalTotalConsumption) => {
+          setIsResultHidden(true);
+          if (!validateTotalConsumption(updatedMinimalTotalConsumption, totalConsumption)) {
+            return;
+          }
+          fetchEnergyConsumptions();
+        })
+      }
+      prevTotalConsumption.current = totalConsumption;
     }
-    prevTotalConsumption.current = totalConsumption;
   }, [
+    isAppliancesAndBoundariesFetched,
     totalConsumption,
-    JSON.stringify(donnees.map((donnee: ComputedAppliance) => donnee.selected))
+    JSON.stringify(computedAppliances.map((donnee: ComputedAppliance) => donnee.selected))
   ]);
 
   const toggleCheckbox = (id: number) => {
-    if (donnees.filter(donnee => donnee.id === id)[0].selected && donnees.filter(donnee => donnee.selected).length === 1) {
+    if (computedAppliances.filter(donnee => donnee.id === id)[0].selected && computedAppliances.filter(donnee => donnee.selected).length === 1) {
       return
     }
-    setDonnees((prevDonnees) =>
+    setComputedAppliances((prevDonnees) =>
       prevDonnees.map((element) =>
         element.id === id ? { ...element, selected: !element.selected } : element
       )
     );
   };
+
+  if (!isAppliancesAndBoundariesFetched || !boundaries || !computedAppliances) {
+    return <div>Fetching data...</div>
+  }
 
   return (
     <>
@@ -116,11 +134,15 @@ function App() {
       />
       <EnergyTable
         isResultHidden={isResultHidden}
-        donnees={donnees}
+        computedAppliances={computedAppliances}
         toggleCheckbox={toggleCheckbox}
         totalComputed={totalComputed}
       />
-      <Constraints isResultHidden={isResultHidden} donnees={donnees} />
+      <Constraints
+        isResultHidden={isResultHidden}
+        computedAppliances={computedAppliances}
+        boundaries={boundaries}
+      />
     </>
   );
 }

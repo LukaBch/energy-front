@@ -1,6 +1,17 @@
 import { AxiosRequestConfig } from 'axios';
 import apiCall from './tools/apiCall';
-import { EnergyConsumptionsApi } from './types';
+import { AppliancesAndBoundariesApi, EnergyConsumptionsApi } from './types';
+
+export async function getAppliancesAndBoundaries(): Promise<AppliancesAndBoundariesApi> {
+  const options: AxiosRequestConfig = {
+    method: 'GET',
+  };
+
+  return apiCall<AppliancesAndBoundariesApi>(
+    "appliances-and-boundaries",
+    options
+  ).then(result => result.data);
+}
 
 export async function getMinimalTotalEnergyConsumption(
   selectedAppliances: number[]
