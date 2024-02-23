@@ -1,9 +1,9 @@
 import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import './App.css';
-import Constraints from './Constraints';
-import EnergyTable from './EnergyTable';
+import Constraints from './components/Constraints';
+import EnergyTable from './components/EnergyTable';
 import { getMinimalTotalEnergyConsumption, getEnergyConsumptions, getAppliancesAndBoundaries } from './service';
-import TotalConsumption from './TotalConsumption';
+import TotalConsumption from './components/TotalConsumption';
 import { ComputedAppliance, EnergyConsumptionApi, Category } from './types';
 
 function App() {

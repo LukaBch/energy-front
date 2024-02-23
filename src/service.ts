@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import apiCall from './tools/apiCall';
+import apiCall from './apiCall';
 import { AppliancesAndBoundariesApi, EnergyConsumptionsApi } from './types';
 
 export async function getAppliancesAndBoundaries(): Promise<AppliancesAndBoundariesApi> {

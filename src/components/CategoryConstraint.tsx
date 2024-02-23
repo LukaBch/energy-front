@@ -1,4 +1,4 @@
-import { ComputedAppliance } from "./types";
+import { ComputedAppliance } from "../types";
 
 type CategoryConstraintProps = {
   isResultHidden: boolean;
